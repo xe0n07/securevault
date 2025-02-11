@@ -4,17 +4,14 @@ import random
 from tkinter import *
 from customtkinter import *
 
-# Set Theme
 set_appearance_mode("dark")
 
-# Root Window
 root = CTk()
 root.title("Secure Vault")
 root.geometry("700x500")
 
 chk = BooleanVar()  # Checkbox variable
 
-# Database Connection
 conn = sqlite3.connect("users.db")
 cursor = conn.cursor()
 cursor.execute("""
@@ -31,20 +28,16 @@ cursor.execute("""
 """)
 conn.commit()
 
-# Hash Password Function
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Show/Hide Password Function
 def show_password(entry_widget):
     entry_widget.configure(show="" if chk.get() else "*")
 
-# Generate OTP Function
 def generate_otp():
     digits = [str(random.randint(0, 9)) for _ in range(6)]
     return "-".join(["".join(digits[i:i+2]) for i in range(0, 6, 2)])
 
-# Verify Security Answers Function
 def verify_security_answers(username, answers):
     cursor.execute("SELECT security_a1, security_a2 FROM users WHERE username = ?", (username,))
     stored_answers = cursor.fetchone()
@@ -54,7 +47,6 @@ def verify_security_answers(username, answers):
             correct_answers += 1
     return correct_answers >= 1
 
-# Signup Function
 def signup():
     username = un.get()
     password = hash_password(pw.get())
@@ -75,7 +67,6 @@ def signup():
     except sqlite3.IntegrityError:
         signup_status.configure(text="Username already exists!", text_color="red")
 
-# Signin Function
 def signin():
     username = username_entry.get()
     otp = otp_entry.get()
@@ -89,7 +80,6 @@ def signin():
     else:
         signin_status.configure(text="Invalid Credentials!", text_color="red")
 
-# Forgot PIN Function
 def forgot_pin():
     forgot_window = CTkToplevel(root)
     forgot_window.geometry("400x600")
@@ -140,14 +130,12 @@ def forgot_pin():
     
     CTkButton(forgot_window, text="Verify and Reset OTP", command=verify_and_reset).pack()
 
-# Open Dashboard Function
 def open_dashboard():
     dashboard = CTkToplevel(root)
     dashboard.geometry("800x600")
     dashboard.title("Secure Vault Dashboard")
     CTkLabel(dashboard, text="Welcome to Your Secure Vault", font=("Space Grotesk", 20)).pack()
 
-# Sign-In Page
 def open_signin_page(event=None):
     global username_entry, otp_entry, signin_status
     signin_window = CTkToplevel(root)
@@ -184,7 +172,6 @@ def open_signin_page(event=None):
     CTkButton(signin_window, text="Forgot PIN?", font=("Space Grotesk", 12), command=forgot_pin,
               corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10)
 
-# Sign-Up Page
 def open_signup_page(event=None):
     global un, pw, q1, a1, q2, a2, signup_status
     signup_window = CTkToplevel(root)
@@ -230,7 +217,6 @@ def open_signup_page(event=None):
     signup_status = CTkLabel(signup_window, text="", font=("Space Grotesk", 12))
     signup_status.pack()
 
-# Landing Page
 CTkLabel(root, text="Let's Get In", font=("Space Grotesk", 40)).pack(pady=20)
 CTkLabel(root, text="Join Secure Vault Today!", font=("Space Grotesk", 30)).pack(pady=10)
 
