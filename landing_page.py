@@ -79,7 +79,7 @@ def signin():
     
     if user:
         signin_status.configure(text="SIGN-IN SUCCESS.", text_color="green")
-        open_dashboard()
+        subprocess.Popen(["python", "dashboard.py"])
     else:
         signin_status.configure(text="Invalid Credentials!", text_color="red")
 
@@ -133,11 +133,6 @@ def forgot_pin():
     
     CTkButton(forgot_window, text="Verify and Reset OTP", command=verify_and_reset).pack()
 
-def open_dashboard():
-    dashboard = CTkToplevel(root)
-    dashboard.geometry("800x600")
-    dashboard.title("Secure Vault Dashboard")
-    CTkLabel(dashboard, text="Welcome to Your Secure Vault", font=("Space Grotesk", 20)).pack()
 
 def open_signin_page(event=None):
     global username_entry, otp_entry, signin_status
