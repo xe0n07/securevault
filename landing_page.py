@@ -1,7 +1,10 @@
 import sqlite3
 import hashlib
 import random
+from cryptography.fernet import Fernet
+from tkinter import PhotoImage
 from tkinter import *
+import subprocess
 from customtkinter import *
 
 # Set Theme
@@ -85,7 +88,7 @@ def signin():
     
     if user:
         signin_status.configure(text="SIGN-IN SUCCESS.", text_color="green")
-        open_dashboard()
+        subprocess.run(["python", "dashboard.py"])
     else:
         signin_status.configure(text="Invalid Credentials!", text_color="red")
 
@@ -139,13 +142,6 @@ def forgot_pin():
             CTkLabel(forgot_window, text="Invalid credentials or answers!", text_color="red").pack()
     
     CTkButton(forgot_window, text="Verify and Reset OTP", command=verify_and_reset).pack()
-
-# Open Dashboard Function
-def open_dashboard():
-    dashboard = CTkToplevel(root)
-    dashboard.geometry("800x600")
-    dashboard.title("Secure Vault Dashboard")
-    CTkLabel(dashboard, text="Welcome to Your Secure Vault", font=("Space Grotesk", 20)).pack()
 
 # Sign-In Page
 def open_signin_page(event=None):
@@ -244,3 +240,4 @@ signup_link.pack(pady=10)
 signup_link.bind("<Button-1>", open_signup_page)
 
 root.mainloop()
+conn.close()
