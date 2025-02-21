@@ -11,6 +11,9 @@ cipher_suite = Fernet(key)
 
 #viewimage
 img=Image.open("view.png")
+img2=Image.open("add.png")
+img3=Image.open("update.png")
+img4=Image.open("delete.png")
 
 # Initialize the main window
 root = CTk()
@@ -172,9 +175,9 @@ def logins():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=10, padx=10)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_login, fg_color="green", width=100).grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", corner_radius=32, command=update_login, fg_color="blue", width=100).grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_login, fg_color="red", width=100).grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_login, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2),width=100).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_login, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3), width=100).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_login, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4), width=100).grid(row=0, column=2, padx=5)
 
     # Listbox to show stored logins
     login_listbox = tk.Listbox(content_frame, width=50, height=10)
@@ -295,9 +298,9 @@ def secure_notes():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_note, fg_color="green").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", corner_radius=32, command=update_note, fg_color="blue").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_note, fg_color="red").grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_note, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_note, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_note, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
 
     # Listbox to show stored notes
     notes_listbox = tk.Listbox(content_frame, width=50, height=10)
@@ -442,9 +445,9 @@ def credit_card():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_credit_card, fg_color="green").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", corner_radius=32, command=update_credit_card, fg_color="blue").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_credit_card, fg_color="red").grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_credit_card, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_credit_card, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_credit_card, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
 
     # Listbox to show stored credit cards
     credit_card_listbox = tk.Listbox(content_frame, width=50, height=10)
@@ -595,9 +598,9 @@ def email_acc():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_email_account, fg_color="green").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update",corner_radius=32,  command=update_email_account, fg_color="blue").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_email_account, fg_color="red").grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_email_account, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update",corner_radius=32,  command=update_email_account, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_email_account, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
 
     # Listbox to show stored email accounts
     email_account_listbox = tk.Listbox(content_frame, width=50, height=10)
@@ -750,9 +753,9 @@ def bank_acc():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_bank_account, fg_color="green").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", corner_radius=32, command=update_bank_account, fg_color="blue").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_bank_account, fg_color="red").grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_bank_account, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_bank_account, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_bank_account, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
 
     # Listbox to show stored bank accounts
     bank_account_listbox = tk.Listbox(content_frame, width=50, height=10)
