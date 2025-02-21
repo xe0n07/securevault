@@ -2,11 +2,15 @@ import tkinter as tk
 from customtkinter import *
 import sqlite3
 from cryptography.fernet import Fernet
+from PIL import Image
 
 # Generate a key for encryption and decryption
 # You must store and use the same key for encryption and decryption
 key = Fernet.generate_key()
 cipher_suite = Fernet(key)
+
+#viewimage
+img=Image.open("view.png")
 
 # Initialize the main window
 root = CTk()
@@ -21,11 +25,11 @@ button_color = "#23272A"
 selected_color = "#7289DA"
 
 menu_bar_frame = CTkFrame(root, fg_color=menu_bar_colour, width=250)
-menu_bar_frame.pack(side=tk.LEFT, fill="y", padx=5, pady=25)
+menu_bar_frame.pack(side=tk.LEFT, fill="y", padx=10, pady=20)
 menu_bar_frame.pack_propagate(False)
 
 content_frame = CTkFrame(root, fg_color="white", width=1050, height=700)
-content_frame.pack(side=tk.RIGHT, fill="both", expand=True, padx=5, pady=25)
+content_frame.pack(side=tk.RIGHT, fill="both", expand=True, padx=10, pady=20)
 
 menu_buttons = {}
 
@@ -37,7 +41,7 @@ def switch_page(page_function):
     page_function()
 
 def logins():
-    label = CTkLabel(content_frame, text="Logins Page", font=("Arial", 24, "bold"), text_color="black")
+    label = CTkLabel(content_frame, text="Login Page", font=("Arial", 24, "bold"), text_color="black")
     label.pack(pady=20)
     
     cursor.execute('''CREATE TABLE IF NOT EXISTS logins (
@@ -139,41 +143,44 @@ def logins():
     # UI Components
     CTkLabel(content_frame, text="Manage Login Credentials", font=("Arial", 20, "bold")).pack(pady=10)
 
-    input_frame = CTkFrame(content_frame)
-    input_frame.pack(pady=5)
+    input_frame = CTkFrame(content_frame, border_color="#D8CBBF", border_width=2)
+    input_frame.pack(pady=5, padx=10) 
 
-    CTkLabel(input_frame, text="Service Name:").grid(row=0, column=0, padx=5, pady=5)
-    service_entry = CTkEntry(input_frame, width=250)
+    # Use a consistent label width for better alignment
+    label_width = 120 
+
+    CTkLabel(input_frame, text="Service Name:", width=label_width, anchor="w").grid(row=0, column=0, padx=5, pady=5)
+    service_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     service_entry.grid(row=0, column=1, padx=5, pady=5)
 
-    CTkLabel(input_frame, text="Username:").grid(row=1, column=0, padx=5, pady=5)
-    username_entry = CTkEntry(input_frame, width=250)
+    CTkLabel(input_frame, text="Username:", width=label_width, anchor="w").grid(row=1, column=0, padx=5, pady=5)
+    username_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     username_entry.grid(row=1, column=1, padx=5, pady=5)
 
-    CTkLabel(input_frame, text="Email:").grid(row=2, column=0, padx=5, pady=5)
-    email_entry = CTkEntry(input_frame, width=250)
+    CTkLabel(input_frame, text="Email:", width=label_width, anchor="w").grid(row=2, column=0, padx=5, pady=5)
+    email_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     email_entry.grid(row=2, column=1, padx=5, pady=5)
 
-    CTkLabel(input_frame, text="Password:").grid(row=3, column=0, padx=5, pady=5)
-    password_entry = CTkEntry(input_frame, width=250, show="*")
+    CTkLabel(input_frame, text="Password:", width=label_width, anchor="w").grid(row=3, column=0, padx=5, pady=5)
+    password_entry = CTkEntry(input_frame, width=250, show="*", border_color="#D8CBBF", border_width=2)
     password_entry.grid(row=3, column=1, padx=5, pady=5)
 
     show_password_var = tk.BooleanVar()
-    show_password_check = CTkCheckBox(input_frame, text="Show Password", variable=show_password_var, command=toggle_password)
+    show_password_check = CTkCheckBox(input_frame, text="Show Password", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=25, checkbox_width=25, corner_radius=36, variable=show_password_var, command=toggle_password)
     show_password_check.grid(row=4, column=1, pady=5)
 
     button_frame = CTkFrame(content_frame)
-    button_frame.pack(pady=5)
+    button_frame.pack(pady=10, padx=10)
 
-    CTkButton(button_frame, text="Add", command=add_login, fg_color="green").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", command=update_login, fg_color="blue").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", command=delete_login, fg_color="red").grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_login, fg_color="green", width=100).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_login, fg_color="blue", width=100).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_login, fg_color="red", width=100).grid(row=0, column=2, padx=5)
 
     # Listbox to show stored logins
     login_listbox = tk.Listbox(content_frame, width=50, height=10)
     login_listbox.pack(pady=5)
 
-    CTkButton(content_frame, text="View", command=view_login, fg_color="purple").pack()
+    CTkButton(content_frame, text="View", corner_radius=32, command=view_login, fg_color="#6F2DA8", image=CTkImage(dark_image=img, light_image=img)).pack()
 
     # Status label
     status_label = CTkLabel(content_frame, text="", text_color="red")
@@ -269,29 +276,34 @@ def secure_notes():
     # UI Components
     # CTkLabel(content_frame, text="Manage Secure Notes", font=("Arial", 20, "bold")).pack(pady=10)
 
-    input_frame = CTkFrame(content_frame)
+    input_frame = CTkFrame(content_frame, border_color="#D8CBBF", border_width=2)
     input_frame.pack(pady=5)
 
+    #Grid Configuration
+    input_frame.grid_columnconfigure(0, weight=1)  # Textbox column expands
+    input_frame.grid_columnconfigure(1, weight=0)  # Scrollbar column doesn't expand
+
     CTkLabel(input_frame, text="Title:").grid(row=0, column=0, padx=5, pady=5)
-    title_entry = CTkEntry(input_frame, width=250)
+    title_entry = CTkEntry(input_frame, border_color="#D8CBBF", border_width=2, width=250)
     title_entry.grid(row=0, column=1, padx=5, pady=5)
 
+    #CTkTextbox for scrollable textbox
     CTkLabel(input_frame, text="Note:").grid(row=1, column=0, padx=5, pady=5)
-    note_text = tk.Text(input_frame, width=50, height=10)
-    note_text.grid(row=1, column=1, padx=5, pady=5)
+    note_text = CTkTextbox(input_frame, scrollbar_button_color="#FFB74D", corner_radius=16, border_color="#D8CBBF", border_width=2)  
+    note_text.grid(row=1, column=1, columnspan=2, padx=5, pady=5, sticky="nsew")
 
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", command=add_note, fg_color="green").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", command=update_note, fg_color="blue").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", command=delete_note, fg_color="red").grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_note, fg_color="green").grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_note, fg_color="blue").grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_note, fg_color="red").grid(row=0, column=2, padx=5)
 
     # Listbox to show stored notes
     notes_listbox = tk.Listbox(content_frame, width=50, height=10)
     notes_listbox.pack(pady=5)
 
-    CTkButton(content_frame, text="View", command=view_note, fg_color="purple").pack()
+    CTkButton(content_frame, text="View", corner_radius=32, command=view_note, image=CTkImage(dark_image=img, light_image=img), fg_color="#6F2DA8").pack()
 
     # Status label
     status_label = CTkLabel(content_frame, text="", text_color="red")
@@ -404,41 +416,41 @@ def credit_card():
     # UI Components
     # CTkLabel(content_frame, text="Manage Credit Card Details", font=("Arial", 20, "bold")).pack(pady=10)
 
-    input_frame = CTkFrame(content_frame)
+    input_frame = CTkFrame(content_frame, border_color="#D8CBBF", border_width=2)
     input_frame.pack(pady=5)
 
     CTkLabel(input_frame, text="Card Number:").grid(row=0, column=0, padx=5, pady=5)
-    card_number_entry = CTkEntry(input_frame, width=250)
+    card_number_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     card_number_entry.grid(row=0, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Service Provider:").grid(row=1, column=0, padx=5, pady=5)
-    service_provider_entry = CTkEntry(input_frame, width=250)
+    service_provider_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     service_provider_entry.grid(row=1, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Validity From:").grid(row=2, column=0, padx=5, pady=5)
-    validity_from_entry = CTkEntry(input_frame, width=250)
+    validity_from_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     validity_from_entry.grid(row=2, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Validity Upto:").grid(row=3, column=0, padx=5, pady=5)
-    validity_upto_entry = CTkEntry(input_frame, width=250)
+    validity_upto_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     validity_upto_entry.grid(row=3, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Security Number:").grid(row=4, column=0, padx=5, pady=5)
-    security_number_entry = CTkEntry(input_frame, width=250)
+    security_number_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     security_number_entry.grid(row=4, column=1, padx=5, pady=5)
 
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", command=add_credit_card, fg_color="green").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", command=update_credit_card, fg_color="blue").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", command=delete_credit_card, fg_color="red").grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_credit_card, fg_color="green").grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_credit_card, fg_color="blue").grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_credit_card, fg_color="red").grid(row=0, column=2, padx=5)
 
     # Listbox to show stored credit cards
     credit_card_listbox = tk.Listbox(content_frame, width=50, height=10)
     credit_card_listbox.pack(pady=5)
 
-    CTkButton(content_frame, text="View", command=view_credit_card, fg_color="purple").pack()
+    CTkButton(content_frame, text="View", corner_radius=32, command=view_credit_card, image=CTkImage(dark_image=img, light_image=img), fg_color="#6F2DA8").pack()
 
     # Status label
     status_label = CTkLabel(content_frame, text="", text_color="red")
@@ -553,45 +565,45 @@ def email_acc():
     # UI Components
     # CTkLabel(content_frame, text="Manage Email Accounts", font=("Arial", 20, "bold")).pack(pady=10)
 
-    input_frame = CTkFrame(content_frame)
+    input_frame = CTkFrame(content_frame, border_color="#D8CBBF", border_width=2)
     input_frame.pack(pady=5)
 
     CTkLabel(input_frame, text="Service Provider:").grid(row=0, column=0, padx=5, pady=5)
-    service_provider_entry = CTkEntry(input_frame, width=250)
+    service_provider_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     service_provider_entry.grid(row=0, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Email:").grid(row=1, column=0, padx=5, pady=5)
-    email_entry = CTkEntry(input_frame, width=250)
+    email_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     email_entry.grid(row=1, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Password:").grid(row=2, column=0, padx=5, pady=5)
-    password_entry = CTkEntry(input_frame, width=250, show="*")
+    password_entry = CTkEntry(input_frame, width=250, show="*", border_color="#D8CBBF", border_width=2)
     password_entry.grid(row=2, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Recovery Email:").grid(row=3, column=0, padx=5, pady=5)
-    recovery_email_entry = CTkEntry(input_frame, width=250)
+    recovery_email_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     recovery_email_entry.grid(row=3, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Recovery Mobile:").grid(row=4, column=0, padx=5, pady=5)
-    recovery_mobile_entry = CTkEntry(input_frame, width=250)
+    recovery_mobile_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     recovery_mobile_entry.grid(row=4, column=1, padx=5, pady=5)
 
     show_password_var = tk.BooleanVar()
-    show_password_check = CTkCheckBox(input_frame, text="Show Password", variable=show_password_var, command=lambda: password_entry.configure(show="" if show_password_var.get() else "*"))
+    show_password_check = CTkCheckBox(input_frame, text="Show Password", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=30, checkbox_width=30, corner_radius=36, variable=show_password_var, command=lambda: password_entry.configure(show="" if show_password_var.get() else "*"))
     show_password_check.grid(row=5, column=1, pady=5)
 
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", command=add_email_account, fg_color="green").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", command=update_email_account, fg_color="blue").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", command=delete_email_account, fg_color="red").grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_email_account, fg_color="green").grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update",corner_radius=32,  command=update_email_account, fg_color="blue").grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_email_account, fg_color="red").grid(row=0, column=2, padx=5)
 
     # Listbox to show stored email accounts
     email_account_listbox = tk.Listbox(content_frame, width=50, height=10)
     email_account_listbox.pack(pady=5)
 
-    CTkButton(content_frame, text="View", command=view_email_account, fg_color="purple").pack()
+    CTkButton(content_frame, text="View",corner_radius=32, command=view_email_account, image=CTkImage(dark_image=img, light_image=img), fg_color="#6F2DA8").pack()
 
     # Status label
     status_label = CTkLabel(content_frame, text="", text_color="red")
@@ -704,49 +716,49 @@ def bank_acc():
     # UI Components
     # CTkLabel(content_frame, text="Manage Bank Accounts", font=("Arial", 20, "bold")).pack(pady=10)
 
-    input_frame = CTkFrame(content_frame)
+    input_frame = CTkFrame(content_frame, border_color="#D8CBBF", border_width=2)
     input_frame.pack(pady=5)
 
     CTkLabel(input_frame, text="Bank Name:").grid(row=0, column=0, padx=5, pady=5)
-    bank_name_entry = CTkEntry(input_frame, width=250)
+    bank_name_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     bank_name_entry.grid(row=0, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Account Number:").grid(row=1, column=0, padx=5, pady=5)
-    account_number_entry = CTkEntry(input_frame, width=250)
+    account_number_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     account_number_entry.grid(row=1, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Branch:").grid(row=2, column=0, padx=5, pady=5)
-    branch_entry = CTkEntry(input_frame, width=250)
+    branch_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     branch_entry.grid(row=2, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Login PIN:").grid(row=3, column=0, padx=5, pady=5)
-    login_pin_entry = CTkEntry(input_frame, width=250, show="*")
+    login_pin_entry = CTkEntry(input_frame, width=250, show="*", border_color="#D8CBBF", border_width=2)
     login_pin_entry.grid(row=3, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Transaction PIN:").grid(row=4, column=0, padx=5, pady=5)
-    transaction_pin_entry = CTkEntry(input_frame, width=250, show="*")
+    transaction_pin_entry = CTkEntry(input_frame, width=250, show="*", border_color="#D8CBBF", border_width=2)
     transaction_pin_entry.grid(row=4, column=1, padx=5, pady=5)
 
     show_login_pin_var = tk.BooleanVar()
-    show_login_pin_check = CTkCheckBox(input_frame, text="Show Login PIN", variable=show_login_pin_var, command=lambda: login_pin_entry.configure(show="" if show_login_pin_var.get() else "*"))
+    show_login_pin_check = CTkCheckBox(input_frame, text="Show Login PIN", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=30, checkbox_width=30, corner_radius=36, variable=show_login_pin_var, command=lambda: login_pin_entry.configure(show="" if show_login_pin_var.get() else "*"))
     show_login_pin_check.grid(row=5, column=1, pady=5)
 
     show_transaction_pin_var = tk.BooleanVar()
-    show_transaction_pin_check = CTkCheckBox(input_frame, text="Show Transaction PIN", variable=show_transaction_pin_var, command=lambda: transaction_pin_entry.configure(show="" if show_transaction_pin_var.get() else "*"))
+    show_transaction_pin_check = CTkCheckBox(input_frame, text="Show Transaction PIN", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=30, checkbox_width=30, corner_radius=36, variable=show_transaction_pin_var, command=lambda: transaction_pin_entry.configure(show="" if show_transaction_pin_var.get() else "*"))
     show_transaction_pin_check.grid(row=6, column=1, pady=5)
 
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", command=add_bank_account, fg_color="green").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", command=update_bank_account, fg_color="blue").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", command=delete_bank_account, fg_color="red").grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_bank_account, fg_color="green").grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_bank_account, fg_color="blue").grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_bank_account, fg_color="red").grid(row=0, column=2, padx=5)
 
     # Listbox to show stored bank accounts
     bank_account_listbox = tk.Listbox(content_frame, width=50, height=10)
     bank_account_listbox.pack(pady=5)
 
-    CTkButton(content_frame, text="View", command=view_bank_account, fg_color="purple").pack()
+    CTkButton(content_frame, text="View", corner_radius=32, command=view_bank_account, image=CTkImage(dark_image=img, light_image=img), fg_color="#6F2DA8").pack()
 
     # Status label
     status_label = CTkLabel(content_frame, text="", text_color="red")

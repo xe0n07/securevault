@@ -227,5 +227,7 @@ signup_link = CTkLabel(root, text="Sign Up", text_color="blue", font=("Space Gro
 signup_link.pack(pady=10)
 signup_link.bind("<Button-1>", open_signup_page)
 
+
+
 root.mainloop()
 conn.close()
