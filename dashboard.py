@@ -24,7 +24,7 @@ menu_bar_frame = CTkFrame(root, fg_color=menu_bar_colour, width=250)
 menu_bar_frame.pack(side=tk.LEFT, fill="y", padx=5, pady=25)
 menu_bar_frame.pack_propagate(False)
 
-content_frame = CTkFrame(root, fg_color="white", width=1050, height=700)
+content_frame = CTkFrame(root, fg_color="white", width=1500, height=850)
 content_frame.pack(side=tk.RIGHT, fill="both", expand=True, padx=5, pady=25)
 
 menu_buttons = {}
@@ -74,16 +74,17 @@ def logins():
     # Function to load logins
     def load_logins():
         login_listbox.delete(0, tk.END)
-        cursor.execute("SELECT id, service FROM logins")
+        cursor.execute("SELECT service, username FROM logins")
         for row in cursor.fetchall():
-            login_listbox.insert(tk.END, f"{row[0]} - {row[1]}")
+            login_listbox.insert(tk.END, f"{row[0]} - {row[1]} - ")
 
     # Function to delete login
     def delete_login():
         try:
             selected = login_listbox.get(login_listbox.curselection())
-            login_id = selected.split(" - ")[0]
-            cursor.execute("DELETE FROM logins WHERE id=?", (login_id,))
+            service = selected.split(" - ")[0]
+            username = selected.split(" - ")[1]
+            cursor.execute("DELETE FROM logins WHERE service=? and username=?", (service    ,username,))
             conn.commit()
             load_logins()
         except:
@@ -93,8 +94,9 @@ def logins():
     def view_login():
         try:
             selected = login_listbox.get(login_listbox.curselection())
-            login_id = selected.split(" - ")[0]
-            cursor.execute("SELECT * FROM logins WHERE id=?", (login_id,))
+            service = selected.split(" - ")[0]
+            username = selected.split(" - ")[1]
+            cursor.execute("SELECT * FROM logins WHERE service=? and username=?", (service,username,))
             data = cursor.fetchone()
             service_entry.delete(0, tk.END)
             username_entry.delete(0, tk.END)
@@ -139,8 +141,8 @@ def logins():
     # UI Components
     CTkLabel(content_frame, text="Manage Login Credentials", font=("Arial", 20, "bold")).pack(pady=10)
 
-    input_frame = CTkFrame(content_frame)
-    input_frame.pack(pady=5)
+    input_frame = CTkFrame(content_frame, width=1200, height=800)
+    input_frame.pack()
 
     CTkLabel(input_frame, text="Service Name:").grid(row=0, column=0, padx=5, pady=5)
     service_entry = CTkEntry(input_frame, width=250)
@@ -170,7 +172,7 @@ def logins():
     CTkButton(button_frame, text="Delete", command=delete_login, fg_color="red").grid(row=0, column=2, padx=5)
 
     # Listbox to show stored logins
-    login_listbox = tk.Listbox(content_frame, width=50, height=10)
+    login_listbox = tk.Listbox(content_frame, width=80, height=10)
     login_listbox.pack(pady=5)
 
     CTkButton(content_frame, text="View", command=view_login, fg_color="purple").pack()
@@ -217,16 +219,16 @@ def secure_notes():
     # Function to load notes
     def load_notes():
         notes_listbox.delete(0, tk.END)
-        cursor.execute("SELECT id, title FROM secure_notes")
+        cursor.execute("SELECT title,note FROM secure_notes")
         for row in cursor.fetchall():
-            notes_listbox.insert(tk.END, f"{row[0]} - {row[1]}")
+            notes_listbox.insert(tk.END, f"{row[0]}")
 
     # Function to delete note
     def delete_note():
         try:
             selected = notes_listbox.get(notes_listbox.curselection())
-            note_id = selected.split(" - ")[0]
-            cursor.execute("DELETE FROM secure_notes WHERE id=?", (note_id,))
+            title = selected.split(" - ")[0]
+            cursor.execute("DELETE FROM secure_notes WHERE title=?", (title,))
             conn.commit()
             load_notes()
         except:
@@ -236,8 +238,9 @@ def secure_notes():
     def view_note():
         try:
             selected = notes_listbox.get(notes_listbox.curselection())
-            note_id = selected.split(" - ")[0]
-            cursor.execute("SELECT * FROM secure_notes WHERE id=?", (note_id,))
+            title = selected.split(" - ")[0]
+            # note = selected.split(" - ")[1]
+            cursor.execute("SELECT * FROM secure_notes WHERE title=? and note=?", (title, note))
             data = cursor.fetchone()
             title_entry.delete(0, tk.END)
             note_text.delete("1.0", tk.END)
@@ -615,11 +618,11 @@ def bank_acc():
 
     # Function to encrypt data
     def encrypt_data(data):
-        return cipher_suite.encrypt(data.encode()).decode()
+        return data
 
     # Function to decrypt data
     def decrypt_data(encrypted_data):
-        return cipher_suite.decrypt(encrypted_data.encode()).decode()
+        return encrypted_data
 
     # Function to add bank account details
     def add_bank_account():
@@ -642,16 +645,16 @@ def bank_acc():
     # Function to load bank accounts
     def load_bank_accounts():
         bank_account_listbox.delete(0, tk.END)
-        cursor.execute("SELECT id, bank_name FROM bank_accounts")
+        cursor.execute("SELECT account_number, bank_name, branch FROM bank_accounts")
         for row in cursor.fetchall():
-            bank_account_listbox.insert(tk.END, f"{row[0]} - {row[1]}")
+            bank_account_listbox.insert(tk.END, f"{row[0]} - {str.upper(row[1])} - [{row[2]}]")
 
     # Function to delete bank account
     def delete_bank_account():
         try:
             selected = bank_account_listbox.get(bank_account_listbox.curselection())
             account_id = selected.split(" - ")[0]
-            cursor.execute("DELETE FROM bank_accounts WHERE id=?", (account_id,))
+            cursor.execute("DELETE FROM bank_accounts WHERE account_number=?", (account_id,))
             conn.commit()
             load_bank_accounts()
         except:
@@ -662,7 +665,7 @@ def bank_acc():
         try:
             selected = bank_account_listbox.get(bank_account_listbox.curselection())
             account_id = selected.split(" - ")[0]
-            cursor.execute("SELECT * FROM bank_accounts WHERE id=?", (account_id,))
+            cursor.execute("SELECT * FROM bank_accounts WHERE account_number=?", (account_id,))
             data = cursor.fetchone()
             bank_name_entry.delete(0, tk.END)
             account_number_entry.delete(0, tk.END)
@@ -692,7 +695,7 @@ def bank_acc():
             if bank_name and account_number and branch and login_pin.isdigit() and transaction_pin.isdigit():
                 encrypted_login_pin = encrypt_data(login_pin)
                 encrypted_transaction_pin = encrypt_data(transaction_pin)
-                cursor.execute("UPDATE bank_accounts SET bank_name=?, account_number=?, branch=?, login_pin=?, transaction_pin=? WHERE id=?",
+                cursor.execute("UPDATE bank_accounts SET bank_name=?, account_number=?, branch=?, login_pin=?, transaction_pin=? WHERE account_number=?",
                                (bank_name, account_number, branch, encrypted_login_pin, encrypted_transaction_pin, account_id))
                 conn.commit()
                 load_bank_accounts()
@@ -770,6 +773,6 @@ for item, function in menu_items.items():
                     hover_color="#5865F2", corner_radius=5, command=lambda f=function: switch_page(f))
     btn.pack(fill="x", pady=5, padx=10)
     menu_buttons[item] = btn
-
+switch_page(logins)
 # Run the main loop
 root.mainloop()
