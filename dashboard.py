@@ -82,8 +82,10 @@ def logins():
     def load_logins():
         login_listbox.delete(0, tk.END)
         cursor.execute("SELECT id, service FROM logins")
+        
         for row in cursor.fetchall():
             login_listbox.insert(tk.END, f"{row[0]} - {row[1]}")
+
 
     # Function to delete login
     def delete_login():
@@ -179,11 +181,16 @@ def logins():
     CTkButton(button_frame, text="Update", corner_radius=32, command=update_login, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3), width=100).grid(row=0, column=1, padx=5)
     CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_login, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4), width=100).grid(row=0, column=2, padx=5)
 
-    # Listbox to show stored logins
-    login_listbox = tk.Listbox(content_frame, width=50, height=10)
-    login_listbox.pack(pady=5)
+    # Listbox in Frame to show stored logins
+    listbox_frame =CTkFrame(content_frame, corner_radius=10, border_width=1)
+    listbox_frame.pack(pady=10, padx=10, fill="x", anchor="center")
 
-    CTkButton(content_frame, text="View", corner_radius=32, command=view_login, fg_color="#6F2DA8", image=CTkImage(dark_image=img, light_image=img)).pack()
+    login_listbox = tk.Listbox(listbox_frame, width=50, height=10, bd=0, highlightthickness=0, font=("Arial", 12),
+                                selectbackground="#a0c2eb", selectforeground="black")
+    login_listbox.pack(pady=10, padx=10, fill="x")
+
+    CTkButton(content_frame, text="View", corner_radius=32, command=view_login, fg_color="#6F2DA8",
+               image=CTkImage(dark_image=img, light_image=img)).pack()
 
     # Status label
     status_label = CTkLabel(content_frame, text="", text_color="red")

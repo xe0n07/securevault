@@ -26,7 +26,7 @@ def toggle_theme(theme):
 
 def create_theme_toggle(window):
     theme_switch = CTkSegmentedButton(root, values=["Light", "Dark"], command=toggle_theme)
-    theme_switch.pack(pady=10)
+    theme_switch.pack(side="right", pady=10)
 
 create_theme_toggle(root)
 
@@ -110,16 +110,17 @@ def forgot_pin():
 
     create_theme_toggle(forgot_window)
 
-    CTkLabel(forgot_window, text="Enter Username:").pack()
+    label_width=120
+    CTkLabel(forgot_window, text="Enter Username:", width=label_width, anchor="center").pack()
     username_entry = CTkEntry(forgot_window)
     username_entry.pack()
     
-    CTkLabel(forgot_window, text="Enter Password:").pack()
+    CTkLabel(forgot_window, text="Enter Password:", width=label_width, anchor="center").pack()
     password_entry = CTkEntry(forgot_window, show="*")
     password_entry.pack()
 
     # Show Password Checkbox
-    CTkCheckBox(forgot_window, text="Show Password", font=("Space Grotesk", 12), variable=chk, 
+    CTkCheckBox(forgot_window, text="Show Password", font=("Space Grotesk", 12), checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=25, checkbox_width=25, corner_radius=36, variable=chk, 
                 command=lambda: show_password(password_entry)).pack(pady=5)
     
     security_questions = [
@@ -166,17 +167,16 @@ def open_signin_page(event=None):
     signin_window.grab_set()
     signin_window.focus_set()
 
-    CTkLabel(frame, text="SECURE VAULT", font=("Space Grotesk", 20, "bold")).pack(pady=10)
-    
-    create_theme_toggle(signin_window)
+    label_width=120
+    CTkLabel(frame, text="SECURE VAULT", font=("Space Grotesk", 20, "bold"), width=label_width, anchor="center").pack(pady=10)
 
-    CTkLabel(frame, text="Welcome Back!", font=("Space Grotesk", 16)).pack()
+    CTkLabel(frame, text="Welcome Back!", font=("Space Grotesk", 16), width=label_width, anchor="center").pack()
     
-    CTkLabel(frame, text="Username:", font=("Space Grotesk", 12)).pack(pady=5)
+    CTkLabel(frame, text="Username:", font=("Space Grotesk", 12), width=label_width, anchor="center").pack(pady=5)
     username_entry = CTkEntry(frame, width=300)
     username_entry.pack()
 
-    CTkLabel(frame, text="One-Time PIN:", font=("Space Grotesk", 12)).pack(pady=5)
+    CTkLabel(frame, text="One-Time PIN:", font=("Space Grotesk", 12), width=label_width, anchor="center").pack(pady=5)
     otp_entry = CTkEntry(frame, width=300)
     otp_entry.pack()
 
@@ -187,13 +187,13 @@ def open_signin_page(event=None):
     otp_entry.configure(validate="key", validatecommand=(otp_entry.register(validate_otp_entry), '%S'))
 
     CTkButton(frame, text="Sign In", font=("Space Grotesk", 12), command=signin,
-              corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10)
+              corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10, anchor="center")
 
     signin_status = CTkLabel(frame, text="", font=("Space Grotesk", 12))
     signin_status.pack()
 
     CTkButton(frame, text="Forgot PIN?", font=("Space Grotesk", 12), command=forgot_pin,
-              corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10)
+              corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10, anchor="center")
 
 def open_signup_page(event=None):
     global un, pw, q1, a1, q2, a2, signup_status
@@ -205,22 +205,21 @@ def open_signup_page(event=None):
     signup_window.grab_set()
     signup_window.focus_set()
     
-    create_theme_toggle(signup_window)
-
-    CTkLabel(signup_window, text="Create Your Account", font=("Space Grotesk", 16)).pack(pady=10)
-    
     frame=CTkFrame(signup_window)
     frame.pack(pady=10, padx=10, fill="both")
 
-    CTkLabel(frame, text="Username", font=("Space Grotesk", 12)).pack(pady=5)
+    label_width=120
+    CTkLabel(frame, text="Create Your Account", font=("Space Grotesk", 16,"bold"), width=label_width, anchor="center").pack(pady=10)
+
+    CTkLabel(frame, text="Username", font=("Space Grotesk", 12), width=label_width, anchor="center").pack(pady=5)
     un = CTkEntry(frame, width=300)
     un.pack()
 
-    CTkLabel(frame, text="Password", font=("Space Grotesk", 12)).pack(pady=5)
+    CTkLabel(frame, text="Password", font=("Space Grotesk", 12), width=label_width, anchor="center").pack(pady=5)
     pw = CTkEntry(frame, show="*", width=300)
     pw.pack()
 
-    CTkCheckBox(frame, text="Show Password", font=("Space Grotesk", 12), variable=chk, 
+    CTkCheckBox(frame, text="Show Password", font=("Space Grotesk", 12), checkmark_color="#FFFFFF", border_width=2, border_color="#81C784", fg_color="#81C784", checkbox_height=25, checkbox_width=25, corner_radius=36, variable=chk, 
                 command=lambda: show_password(pw)).pack(pady=5)
 
     security_questions = [
@@ -232,15 +231,15 @@ def open_signup_page(event=None):
     q2, a2 = StringVar(), StringVar()
 
     for i, q in enumerate(security_questions, 1):
-        CTkLabel(frame, text=f"Security Question {i}:", font=("Space Grotesk", 12)).pack(pady=5)
-        question = CTkOptionMenu(frame, variable=eval(f'q{i}'), values=security_questions, width=250)
+        CTkLabel(frame, text=f"Security Question {i}:", font=("Space Grotesk", 12), width=label_width, anchor="center").pack(pady=5)
+        question = CTkOptionMenu(frame, variable=eval(f'q{i}'), values=security_questions, width=250, height=10, corner_radius=10)
         question.pack()
-        CTkLabel(frame, text="Answer:", font=("Space Grotesk", 12)).pack()
-        answer = CTkEntry(frame, textvariable=eval(f'a{i}'), width=250)
+        CTkLabel(frame, text="Answer:", font=("Space Grotesk", 12), width=label_width, anchor="center").pack()
+        answer = CTkEntry(frame, textvariable=eval(f'a{i}'), width=250, height=10, corner_radius=10)
         answer.pack()
 
     CTkButton(frame, text="Sign Up", font=("Space Grotesk", 12), command=signup,
-              corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10)
+              corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10, anchor="center")
 
     signup_status = CTkLabel(frame, text="", font=("Space Grotesk", 12))
     signup_status.pack()
@@ -250,7 +249,7 @@ CTkLabel(root, text="Join Secure Vault Today!", font=("Space Grotesk", 30)).pack
 
 CTkButton(root, text="Sign In With Your Account", font=("Space Grotesk", 20),
           command=open_signin_page, corner_radius=32, 
-          fg_color="#C850C0", hover_color="#4158D0", height=50, width=250).pack(pady=30)
+          fg_color="#C850C0", hover_color="#4158D0", height=50, width=250).pack(pady=30, anchor="center")
 
 CTkLabel(root, text="Don't have an account?", font=("Space Grotesk", 18)).pack()
 signup_link = CTkLabel(root, text="Sign Up", text_color="blue", font=("Space Grotesk", 22, "underline"))
