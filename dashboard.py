@@ -82,7 +82,7 @@ def logins():
     def load_logins():
         login_listbox.delete(0, tk.END)
         cursor.execute("SELECT id, service FROM logins")
-        
+
         for row in cursor.fetchall():
             login_listbox.insert(tk.END, f"{row[0]} - {row[1]}")
 
@@ -178,16 +178,22 @@ def logins():
     button_frame.pack(pady=10, padx=10)
 
     CTkButton(button_frame, text="Add", corner_radius=32, command=add_login, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2),width=100).grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", corner_radius=32, command=update_login, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3), width=100).grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_login, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4), width=100).grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_login, fg_color="#007bff",hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3), width=100).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_login, fg_color="#D32F2F",hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4), width=100).grid(row=0, column=2, padx=5)
 
-    # Listbox in Frame to show stored logins
-    listbox_frame =CTkFrame(content_frame, corner_radius=10, border_width=1)
-    listbox_frame.pack(pady=10, padx=10, fill="x", anchor="center")
+    # Listbox with scrollbar to show stored logins
+    
+    listbox_frame =CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
+    listbox_frame.pack(pady=10, padx=10, fill="both", expand=True)
+
+    scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)
 
     login_listbox = tk.Listbox(listbox_frame, width=50, height=10, bd=0, highlightthickness=0, font=("Arial", 12),
-                                selectbackground="#a0c2eb", selectforeground="black")
-    login_listbox.pack(pady=10, padx=10, fill="x")
+                                selectbackground="#a0c2eb", selectforeground="black", yscrollcommand=scrollbar.set )
+    login_listbox.pack(side=tk.LEFT, pady=10, padx=10, fill="both", expand=True)
+    
+    scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
+    scrollbar.config(command=login_listbox.yview)
 
     CTkButton(content_frame, text="View", corner_radius=32, command=view_login, fg_color="#6F2DA8",
                image=CTkImage(dark_image=img, light_image=img)).pack()
@@ -305,13 +311,22 @@ def secure_notes():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_note, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", corner_radius=32, command=update_note, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_note, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_note, fg_color="#43A047", hover_color="#2E7D32", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_note, fg_color="#007bff",hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_note, fg_color="#D32F2F",hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
 
-    # Listbox to show stored notes
-    notes_listbox = tk.Listbox(content_frame, width=50, height=10)
-    notes_listbox.pack(pady=5)
+    # Listbox with scrollbar to show stored notes
+    listbox_frame =CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
+    listbox_frame.pack(pady=10, padx=10, fill="both", expand=True)
+
+    scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)
+
+    notes_listbox = tk.Listbox(listbox_frame, width=50, height=10, bd=0, highlightthickness=0, font=("Arial", 12),
+                                selectbackground="#a0c2eb", selectforeground="black", yscrollcommand=scrollbar.set)
+    notes_listbox.pack(side=tk.LEFT, pady=10, padx=10, fill="both", expand=True)
+    
+    scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
+    scrollbar.config(command=notes_listbox.yview)
 
     CTkButton(content_frame, text="View", corner_radius=32, command=view_note, image=CTkImage(dark_image=img, light_image=img), fg_color="#6F2DA8").pack()
 
@@ -452,13 +467,22 @@ def credit_card():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_credit_card, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", corner_radius=32, command=update_credit_card, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_credit_card, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_credit_card, fg_color="#43A047", hover_color="#2E7D32", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_credit_card, fg_color="#007bff",hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_credit_card, fg_color="#D32F2F",hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
 
     # Listbox to show stored credit cards
-    credit_card_listbox = tk.Listbox(content_frame, width=50, height=10)
-    credit_card_listbox.pack(pady=5)
+    listbox_frame =CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
+    listbox_frame.pack(pady=10, padx=10, fill="both", expand=True)
+
+    scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)
+
+    credit_card_listbox = tk.Listbox(listbox_frame, width=50, height=10, bd=0, highlightthickness=0, font=("Arial", 12),
+                                selectbackground="#a0c2eb", selectforeground="black", yscrollcommand=scrollbar.set)
+    credit_card_listbox.pack(side=tk.LEFT, pady=10, padx=10, fill="both", expand=True)
+
+    scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
+    scrollbar.config(command=credit_card_listbox.yview)
 
     CTkButton(content_frame, text="View", corner_radius=32, command=view_credit_card, image=CTkImage(dark_image=img, light_image=img), fg_color="#6F2DA8").pack()
 
@@ -605,13 +629,22 @@ def email_acc():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_email_account, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update",corner_radius=32,  command=update_email_account, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_email_account, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_email_account, fg_color="#43A047", hover_color="#2E7D32", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update",corner_radius=32,  command=update_email_account, fg_color="#007bff",hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_email_account, fg_color="#D32F2F",hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
 
     # Listbox to show stored email accounts
-    email_account_listbox = tk.Listbox(content_frame, width=50, height=10)
-    email_account_listbox.pack(pady=5)
+    listbox_frame =CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
+    listbox_frame.pack(pady=10, padx=10, fill="both", expand=True)
+
+    scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)
+
+    email_account_listbox = tk.Listbox(listbox_frame, width=50, height=10, bd=0, highlightthickness=0, font=("Arial", 12),
+                                selectbackground="#a0c2eb", selectforeground="black", yscrollcommand=scrollbar.set)
+    email_account_listbox.pack(side=tk.LEFT, pady=10, padx=10, fill="both", expand=True)
+
+    scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
+    scrollbar.config(email_account_listbox.yview)
 
     CTkButton(content_frame, text="View",corner_radius=32, command=view_email_account, image=CTkImage(dark_image=img, light_image=img), fg_color="#6F2DA8").pack()
 
@@ -750,23 +783,40 @@ def bank_acc():
     transaction_pin_entry.grid(row=4, column=1, padx=5, pady=5)
 
     show_login_pin_var = tk.BooleanVar()
-    show_login_pin_check = CTkCheckBox(input_frame, text="Show Login PIN", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=30, checkbox_width=30, corner_radius=36, variable=show_login_pin_var, command=lambda: login_pin_entry.configure(show="" if show_login_pin_var.get() else "*"))
+    show_login_pin_check = CTkCheckBox(input_frame, text="Show Login PIN", checkmark_color="#FFFFFF",
+                                        border_color="#81C784", fg_color="#81C784", checkbox_height=30,
+                                          checkbox_width=30, corner_radius=36, variable=show_login_pin_var,
+                                           command=lambda: login_pin_entry.configure(show="" if show_login_pin_var.get() else "*"))
     show_login_pin_check.grid(row=5, column=1, pady=5)
 
     show_transaction_pin_var = tk.BooleanVar()
-    show_transaction_pin_check = CTkCheckBox(input_frame, text="Show Transaction PIN", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=30, checkbox_width=30, corner_radius=36, variable=show_transaction_pin_var, command=lambda: transaction_pin_entry.configure(show="" if show_transaction_pin_var.get() else "*"))
+    show_transaction_pin_check = CTkCheckBox(input_frame, text="Show Transaction PIN", checkmark_color="#FFFFFF", border_color="#81C784",
+                                              fg_color="#81C784", checkbox_height=30, checkbox_width=30, corner_radius=36,
+                                                variable=show_transaction_pin_var, command=lambda: transaction_pin_entry.configure(show="" if show_transaction_pin_var.get() else "*"))
     show_transaction_pin_check.grid(row=6, column=1, pady=5)
 
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_bank_account, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", corner_radius=32, command=update_bank_account, fg_color="#007bff", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_bank_account, fg_color="#D32F2F", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_bank_account, fg_color="#43A047",
+               hover_color="#2E7D32", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_bank_account, fg_color="#007bff",
+              hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_bank_account, fg_color="#D32F2F",
+              hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
 
     # Listbox to show stored bank accounts
-    bank_account_listbox = tk.Listbox(content_frame, width=50, height=10)
-    bank_account_listbox.pack(pady=5)
+    listbox_frame =CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
+    listbox_frame.pack(pady=10, padx=10, fill="both", expand=True)
+
+    scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)
+
+    bank_account_listbox = tk.Listbox(listbox_frame, width=50, height=10, bd=0, highlightthickness=0, font=("Arial", 12),
+                                selectbackground="#a0c2eb", selectforeground="black", yscrollcommand=scrollbar.set)
+    bank_account_listbox.pack(side=tk.LEFT, pady=10, padx=10, fill="both", expand=True)
+
+    scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
+    scrollbar.config(command=bank_account_listbox.yview)
 
     CTkButton(content_frame, text="View", corner_radius=32, command=view_bank_account, image=CTkImage(dark_image=img, light_image=img), fg_color="#6F2DA8").pack()
 
