@@ -4,14 +4,41 @@ import random
 from tkinter import *
 import subprocess
 from customtkinter import *
+from PIL import Image, ImageTk
 
 # Set Theme
-set_appearance_mode("dark")
+#set_appearance_mode("dark")
 
 # Root Window
 root = CTk()
 root.title("Secure Vault")
-root.geometry("700x500")
+root.geometry("1300x700")
+
+button_mode = True
+
+def changemode():
+    global button_mode
+    if button_mode:
+        button.config(image=off_tk, bg="black", activebackground="black")
+        root.config(bg="black")
+        button_mode = False
+    else:
+        button.config(image=on_tk, bg="white", activebackground="white")
+        root.config(bg="white")
+        button_mode = True
+
+# Load and Resize Images (using PIL)
+image_size = (32, 32)  # Adjust to your desired button size
+
+on_pil = Image.open("light.png").resize(image_size, Image.LANCZOS)
+off_pil = Image.open("dark.png").resize(image_size, Image.LANCZOS)
+
+# Convert PIL Images to PhotoImage
+on_tk = ImageTk.PhotoImage(on_pil)
+off_tk = ImageTk.PhotoImage(off_pil)
+
+button = Button(root, image=on_tk, bd=0, bg="white", command=changemode)
+button.pack(padx=10, pady=10)
 
 chk = BooleanVar()  # Checkbox variable
 
@@ -137,22 +164,25 @@ def forgot_pin():
 def open_signin_page(event=None):
     global username_entry, otp_entry, signin_status
     signin_window = CTkToplevel(root)
-    signin_window.geometry("400x400")
+    signin_window.geometry("700x700")
     signin_window.title("Sign In")
+
+    frame=CTkFrame(signin_window, corner_radius=15)
+    frame.pack(pady=20, padx=20, fill="both")
 
     signin_window.transient(root)
     signin_window.grab_set()
     signin_window.focus_set()
 
-    CTkLabel(signin_window, text="SECURE VAULT", font=("Space Grotesk", 20)).pack()
-    CTkLabel(signin_window, text="Welcome Back!", font=("Space Grotesk", 16)).pack()
+    CTkLabel(frame, text="SECURE VAULT", font=("Space Grotesk", 20, "bold")).pack(pady=10)
+    CTkLabel(frame, text="Welcome Back!", font=("Space Grotesk", 16)).pack()
     
-    CTkLabel(signin_window, text="Username:", font=("Space Grotesk", 12)).pack()
-    username_entry = CTkEntry(signin_window)
+    CTkLabel(frame, text="Username:", font=("Space Grotesk", 12)).pack(pady=5)
+    username_entry = CTkEntry(frame, width=300)
     username_entry.pack()
 
-    CTkLabel(signin_window, text="One-Time PIN:", font=("Space Grotesk", 12)).pack()
-    otp_entry = CTkEntry(signin_window)
+    CTkLabel(frame, text="One-Time PIN:", font=("Space Grotesk", 12)).pack(pady=5)
+    otp_entry = CTkEntry(frame, width=300)
     otp_entry.pack()
 
     # Restrict OTP entry to digits and hyphen
@@ -161,36 +191,39 @@ def open_signin_page(event=None):
     
     otp_entry.configure(validate="key", validatecommand=(otp_entry.register(validate_otp_entry), '%S'))
 
-    CTkButton(signin_window, text="Sign In", font=("Space Grotesk", 12), command=signin,
+    CTkButton(frame, text="Sign In", font=("Space Grotesk", 12), command=signin,
               corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10)
 
-    signin_status = CTkLabel(signin_window, text="", font=("Space Grotesk", 12))
+    signin_status = CTkLabel(frame, text="", font=("Space Grotesk", 12))
     signin_status.pack()
 
-    CTkButton(signin_window, text="Forgot PIN?", font=("Space Grotesk", 12), command=forgot_pin,
+    CTkButton(frame, text="Forgot PIN?", font=("Space Grotesk", 12), command=forgot_pin,
               corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10)
 
 def open_signup_page(event=None):
     global un, pw, q1, a1, q2, a2, signup_status
     signup_window = CTkToplevel(root)
-    signup_window.geometry("400x500")
+    signup_window.geometry("1000x700")
     signup_window.title("Sign Up")
 
     signup_window.transient(root)
     signup_window.grab_set()
     signup_window.focus_set()
 
-    CTkLabel(signup_window, text="Create Your Account", font=("Space Grotesk", 16)).pack()
+    CTkLabel(signup_window, text="Create Your Account", font=("Space Grotesk", 16)).pack(pady=10)
     
-    CTkLabel(signup_window, text="Username", font=("Space Grotesk", 12)).pack()
-    un = CTkEntry(signup_window)
+    frame=CTkFrame(signup_window)
+    frame.pack(pady=10, padx=10, fill="both")
+
+    CTkLabel(frame, text="Username", font=("Space Grotesk", 12)).pack(pady=5)
+    un = CTkEntry(frame, width=300)
     un.pack()
 
-    CTkLabel(signup_window, text="Password", font=("Space Grotesk", 12)).pack()
-    pw = CTkEntry(signup_window, show="*")
+    CTkLabel(frame, text="Password", font=("Space Grotesk", 12)).pack(pady=5)
+    pw = CTkEntry(frame, show="*", width=300)
     pw.pack()
 
-    CTkCheckBox(signup_window, text="Show Password", font=("Space Grotesk", 12), variable=chk, 
+    CTkCheckBox(frame, text="Show Password", font=("Space Grotesk", 12), variable=chk, 
                 command=lambda: show_password(pw)).pack(pady=5)
 
     security_questions = [
@@ -202,17 +235,17 @@ def open_signup_page(event=None):
     q2, a2 = StringVar(), StringVar()
 
     for i, q in enumerate(security_questions, 1):
-        CTkLabel(signup_window, text=f"Security Question {i}:", font=("Space Grotesk", 12)).pack()
-        question = CTkOptionMenu(signup_window, variable=eval(f'q{i}'), values=security_questions)
+        CTkLabel(frame, text=f"Security Question {i}:", font=("Space Grotesk", 12)).pack(pady=5)
+        question = CTkOptionMenu(frame, variable=eval(f'q{i}'), values=security_questions, width=250)
         question.pack()
-        CTkLabel(signup_window, text="Answer:", font=("Space Grotesk", 12)).pack()
-        answer = CTkEntry(signup_window, textvariable=eval(f'a{i}'))
+        CTkLabel(frame, text="Answer:", font=("Space Grotesk", 12)).pack()
+        answer = CTkEntry(frame, textvariable=eval(f'a{i}'), width=250)
         answer.pack()
 
-    CTkButton(signup_window, text="Sign Up", font=("Space Grotesk", 12), command=signup,
+    CTkButton(frame, text="Sign Up", font=("Space Grotesk", 12), command=signup,
               corner_radius=32, fg_color="#C850C0", hover_color="#4158D0").pack(pady=10)
 
-    signup_status = CTkLabel(signup_window, text="", font=("Space Grotesk", 12))
+    signup_status = CTkLabel(frame, text="", font=("Space Grotesk", 12))
     signup_status.pack()
 
 CTkLabel(root, text="Let's Get In", font=("Space Grotesk", 40)).pack(pady=20)
