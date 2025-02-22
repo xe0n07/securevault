@@ -4,41 +4,31 @@ import random
 from tkinter import *
 import subprocess
 from customtkinter import *
-from PIL import Image, ImageTk
 
 # Set Theme
-#set_appearance_mode("dark")
+set_appearance_mode("dark")
 
 # Root Window
 root = CTk()
 root.title("Secure Vault")
 root.geometry("1300x700")
 
-button_mode = True
+#Light and Dark Toggle 
+def toggle_theme(theme):
+    set_appearance_mode(theme)
 
-def changemode():
-    global button_mode
-    if button_mode:
-        button.config(image=off_tk, bg="black", activebackground="black")
-        root.config(bg="black")
-        button_mode = False
-    else:
-        button.config(image=on_tk, bg="white", activebackground="white")
-        root.config(bg="white")
-        button_mode = True
+    # Refresh all open Toplevel windows
+    for window in root.winfo_toplevels():
+        if isinstance(window, CTkToplevel):
+            window.update()
+            for widget in window.winfo_children():
+                widget.update()
 
-# Load and Resize Images (using PIL)
-image_size = (32, 32)  # Adjust to your desired button size
+def create_theme_toggle(window):
+    theme_switch = CTkSegmentedButton(root, values=["Light", "Dark"], command=toggle_theme)
+    theme_switch.pack(pady=10)
 
-on_pil = Image.open("light.png").resize(image_size, Image.LANCZOS)
-off_pil = Image.open("dark.png").resize(image_size, Image.LANCZOS)
-
-# Convert PIL Images to PhotoImage
-on_tk = ImageTk.PhotoImage(on_pil)
-off_tk = ImageTk.PhotoImage(off_pil)
-
-button = Button(root, image=on_tk, bd=0, bg="white", command=changemode)
-button.pack(padx=10, pady=10)
+create_theme_toggle(root)
 
 chk = BooleanVar()  # Checkbox variable
 
@@ -117,7 +107,9 @@ def forgot_pin():
     forgot_window.transient(root)
     forgot_window.grab_set()
     forgot_window.focus_set()
-    
+
+    create_theme_toggle(forgot_window)
+
     CTkLabel(forgot_window, text="Enter Username:").pack()
     username_entry = CTkEntry(forgot_window)
     username_entry.pack()
@@ -175,6 +167,9 @@ def open_signin_page(event=None):
     signin_window.focus_set()
 
     CTkLabel(frame, text="SECURE VAULT", font=("Space Grotesk", 20, "bold")).pack(pady=10)
+    
+    create_theme_toggle(signin_window)
+
     CTkLabel(frame, text="Welcome Back!", font=("Space Grotesk", 16)).pack()
     
     CTkLabel(frame, text="Username:", font=("Space Grotesk", 12)).pack(pady=5)
@@ -209,6 +204,8 @@ def open_signup_page(event=None):
     signup_window.transient(root)
     signup_window.grab_set()
     signup_window.focus_set()
+    
+    create_theme_toggle(signup_window)
 
     CTkLabel(signup_window, text="Create Your Account", font=("Space Grotesk", 16)).pack(pady=10)
     
