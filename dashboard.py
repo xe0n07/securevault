@@ -139,20 +139,17 @@ def logins():
             status_label.configure(text="Select an entry to update!", text_color="red")
 
     # Toggle show password
-    def toggle_password():
-        if show_password_var.get():
-            password_entry.configure(show="")
-        else:
-            password_entry.configure(show="*")
+    # Load Images
+    show_img = CTkImage(Image.open("show.png"))
+    hide_img = CTkImage(Image.open("hide.png"))
 
     # UI Components
     CTkLabel(content_frame, text="Manage Login Credentials", font=("Arial", 20, "bold")).pack(pady=10)
 
     input_frame = CTkFrame(content_frame, border_color="#D8CBBF", border_width=2)
-    input_frame.pack(pady=5, padx=10) 
+    input_frame.pack(pady=5, padx=10)
 
-    # Use a consistent label width for better alignment
-    label_width = 120 
+    label_width = 120
 
     CTkLabel(input_frame, text="Service Name:", width=label_width, anchor="w").grid(row=0, column=0, padx=5, pady=5)
     service_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
@@ -167,12 +164,35 @@ def logins():
     email_entry.grid(row=2, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Password:", width=label_width, anchor="w").grid(row=3, column=0, padx=5, pady=5)
-    password_entry = CTkEntry(input_frame, width=250, show="*", border_color="#D8CBBF", border_width=2)
-    password_entry.grid(row=3, column=1, padx=5, pady=5)
 
-    show_password_var = tk.BooleanVar()
-    show_password_check = CTkCheckBox(input_frame, text="Show Password", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=25, checkbox_width=25, corner_radius=36, variable=show_password_var, command=toggle_password)
-    show_password_check.grid(row=4, column=1, pady=5)
+    # Password Frame
+    password_frame = CTkFrame(input_frame, fg_color="transparent")
+    password_frame.grid(row=3, column=1, padx=5, pady=5)  
+
+    password_entry = CTkEntry(password_frame, width=225, show="*", border_color="#D8CBBF", border_width=2)
+    password_entry.grid(row=0, column=0, padx=0, pady=0)
+
+    show_password_label = CTkLabel(password_frame, image=hide_img, text="")
+    show_password_label.grid(row=0, column=1, padx=5, pady=0) 
+
+    password_hidden = True
+
+    def toggle_password_visibility(event=None):
+        nonlocal password_hidden
+        if password_hidden:
+            password_entry.configure(show="")
+            show_password_label.configure(image=show_img)
+        else:
+            password_entry.configure(show="*")
+            show_password_label.configure(image=hide_img)
+        password_hidden = not password_hidden
+
+    show_password_label.bind("<Button-1>", toggle_password_visibility)
+
+
+    #show_password_var = tk.BooleanVar()
+    #show_password_check = CTkCheckBox(input_frame, text="Show Password", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=25, checkbox_width=25, corner_radius=36, variable=show_password_var, command=toggle_password)
+    #show_password_check.grid(row=4, column=1, pady=5)
 
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=10, padx=10)

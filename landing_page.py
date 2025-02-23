@@ -4,6 +4,7 @@ import random
 from tkinter import *
 import subprocess
 from customtkinter import *
+from PIL import Image
 
 # Set Theme
 set_appearance_mode("dark")
@@ -102,27 +103,50 @@ def signin():
 
 def forgot_pin():
     forgot_window = CTkToplevel(root)
-    forgot_window.geometry("400x600")
+    forgot_window.geometry("800x800")
     forgot_window.title("Recover PIN")
     forgot_window.transient(root)
     forgot_window.grab_set()
     forgot_window.focus_set()
 
-    create_theme_toggle(forgot_window)
-
     label_width=120
-    CTkLabel(forgot_window, text="Enter Username:", width=label_width, anchor="center").pack()
+    CTkLabel(forgot_window, text="Enter Username:", width=label_width, anchor="center").pack(pady=10)
     username_entry = CTkEntry(forgot_window)
-    username_entry.pack()
+    username_entry.pack(pady=10)
     
-    CTkLabel(forgot_window, text="Enter Password:", width=label_width, anchor="center").pack()
-    password_entry = CTkEntry(forgot_window, show="*")
-    password_entry.pack()
+    CTkLabel(forgot_window, text="Enter Password:", width=label_width, anchor="center").pack(pady=10)
+
+    password_frame = CTkFrame(forgot_window, fg_color="transparent")
+    password_frame.pack(pady=10)
+
+    password_entry = CTkEntry(password_frame, show="*")
+    password_entry.pack(pady=10, side= LEFT)
+
+    #Load Images
+    show_img=CTkImage(Image.open("show.png"))
+    hide_img=CTkImage(Image.open("hide.png"))
+
+    show_password_label=CTkLabel(password_frame, image=hide_img,text="")
+    show_password_label.pack(side=LEFT, pady=5)
+
+    password_hidden=True
+
+    def toggle_password_visibility(event=None):
+        nonlocal password_hidden
+        if password_hidden:
+            password_entry.configure(show="")
+            show_password_label.configure(image=show_img)
+        else:
+            password_entry.configure(show="*")
+            show_password_label.configure(image=hide_img)
+        password_hidden= not password_hidden
+
+    show_password_label.bind("<Button-1>", toggle_password_visibility)
 
     # Show Password Checkbox
-    CTkCheckBox(forgot_window, text="Show Password", font=("Space Grotesk", 12), checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=25, checkbox_width=25, corner_radius=36, variable=chk, 
-                command=lambda: show_password(password_entry)).pack(pady=5)
-    
+   # CTkCheckBox(forgot_window, text="Show Password", font=("Space Grotesk", 12), variable=chk, 
+            #    command=lambda: show_password(password_entry)).pack(pady=5)
+
     security_questions = [
         "Where were you born?",
         "What is your favorite book?"
@@ -152,7 +176,6 @@ def forgot_pin():
             CTkLabel(forgot_window, text="Invalid credentials or answers!", text_color="red").pack()
     
     CTkButton(forgot_window, text="Verify and Reset OTP", command=verify_and_reset).pack()
-
 
 def open_signin_page(event=None):
     global username_entry, otp_entry, signin_status
@@ -216,11 +239,33 @@ def open_signup_page(event=None):
     un.pack()
 
     CTkLabel(frame, text="Password", font=("Space Grotesk", 12), width=label_width, anchor="center").pack(pady=5)
-    pw = CTkEntry(frame, show="*", width=300)
-    pw.pack()
 
-    CTkCheckBox(frame, text="Show Password", font=("Space Grotesk", 12), checkmark_color="#FFFFFF", border_width=2, border_color="#81C784", fg_color="#81C784", checkbox_height=25, checkbox_width=25, corner_radius=36, variable=chk, 
-                command=lambda: show_password(pw)).pack(pady=5)
+    password_frame = CTkFrame(frame, fg_color="transparent")
+    password_frame.pack(pady=10)
+
+    pw = CTkEntry(password_frame, width=290, show="*")
+    pw.pack(pady=10, side= LEFT)
+
+    #Load Images
+    show_img=CTkImage(Image.open("show.png"))
+    hide_img=CTkImage(Image.open("hide.png"))
+
+    show_password_label=CTkLabel(password_frame, image=hide_img,text="")
+    show_password_label.pack(side=LEFT, pady=5)
+
+    password_hidden=True
+
+    def toggle_password_visibility(event=None):
+        nonlocal password_hidden
+        if password_hidden:
+            pw.configure(show="")
+            show_password_label.configure(image=show_img)
+        else:
+            pw.configure(show="*")
+            show_password_label.configure(image=hide_img)
+        password_hidden= not password_hidden
+
+    show_password_label.bind("<Button-1>", toggle_password_visibility)
 
     security_questions = [
         "Where were you born?",
@@ -244,7 +289,7 @@ def open_signup_page(event=None):
     signup_status = CTkLabel(frame, text="", font=("Space Grotesk", 12))
     signup_status.pack()
 
-CTkLabel(root, text="Let's Get In", font=("Space Grotesk", 40)).pack(pady=20)
+CTkLabel(root, text="Let's Get In", font=("Space Grotesk", 40)).pack(pady=120)
 CTkLabel(root, text="Join Secure Vault Today!", font=("Space Grotesk", 30)).pack(pady=10)
 
 CTkButton(root, text="Sign In With Your Account", font=("Space Grotesk", 20),
