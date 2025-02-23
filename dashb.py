@@ -9,14 +9,13 @@ from PIL import Image
 key = Fernet.generate_key()
 cipher_suite = Fernet(key)
 
-# Load Images
+#viewimage
 img=Image.open("view.png")
 img2=Image.open("add.png")
 img3=Image.open("update.png")
 img4=Image.open("delete.png")
 show_img = CTkImage(Image.open("show.png"))
 hide_img = CTkImage(Image.open("hide.png"))
-
 
 # Initialize the main window
 root = CTk()
@@ -38,6 +37,20 @@ content_frame = CTkFrame(root, fg_color="white", width=1050, height=700)
 content_frame.pack(side=tk.RIGHT, fill="both", expand=True, padx=10, pady=20)
 
 menu_buttons = {}
+
+
+password_hidden = True
+def toggle_password_visibility(event=None):
+    nonlocal password_hidden
+    if password_hidden:
+        password_entry.configure(show="")
+        show_password_label.configure(image=show_img)
+    else:
+        password_entry.configure(show="*")
+        show_password_label.configure(image=hide_img)
+    password_hidden = not password_hidden
+
+show_password_label.bind("<Button-1>", toggle_password_visibility)
 
 def switch_page(page_function):
     """ Clears the content frame and calls the selected page function """
@@ -140,7 +153,7 @@ def logins():
                 status_label.configure(text="Service & Password are required!", text_color="red")
         except:
             status_label.configure(text="Select an entry to update!", text_color="red")
-    
+
     # UI Components
     CTkLabel(content_frame, text="Manage Login Credentials", font=("Arial", 20, "bold")).pack(pady=10)
 
@@ -173,20 +186,12 @@ def logins():
     show_password_label = CTkLabel(password_frame, image=hide_img, text="")
     show_password_label.grid(row=0, column=1, padx=5, pady=0) 
 
-    password_hidden = True
+    toggle_password_visibility()
 
-    # Password Toggle
-    def toggle_password_visibility(event=None):
-        nonlocal password_hidden
-        if password_hidden:
-            password_entry.configure(show="")
-            show_password_label.configure(image=show_img)
-        else:
-            password_entry.configure(show="*")
-            show_password_label.configure(image=hide_img)
-        password_hidden = not password_hidden
 
-    show_password_label.bind("<Button-1>", toggle_password_visibility)
+    #show_password_var = tk.BooleanVar()
+    #show_password_check = CTkCheckBox(input_frame, text="Show Password", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=25, checkbox_width=25, corner_radius=36, variable=show_password_var, command=toggle_password)
+    #show_password_check.grid(row=4, column=1, pady=5)
 
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=10, padx=10)
@@ -625,30 +630,8 @@ def email_acc():
     email_entry.grid(row=1, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Password:").grid(row=2, column=0, padx=5, pady=5)
-    
-    password_frame = CTkFrame(input_frame, fg_color="transparent")
-    password_frame.grid(row=2, column=1, sticky="ew", padx=10, pady=5)
-
-    password_entry = CTkEntry(password_frame, width=225, border_color="#D8CBBF", border_width=2, show="*")
-    password_entry.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
-
-    #Password Toggle
-    show_password_label = CTkLabel(password_frame, image=hide_img, text="")
-    show_password_label.grid(row=0, column=1, padx=5) 
-
-    password_hidden = True  
-
-    def toggle_password_visibility(event=None):
-        nonlocal password_hidden
-        if password_hidden:
-            password_entry.configure(show="")
-            show_password_label.configure(image=show_img)
-        else:
-            password_entry.configure(show="*")
-            show_password_label.configure(image=hide_img)
-        password_hidden = not password_hidden
-
-    show_password_label.bind("<Button-1>", toggle_password_visibility)
+    password_entry = CTkEntry(input_frame, width=250, show="*", border_color="#D8CBBF", border_width=2)
+    password_entry.grid(row=2, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Recovery Email:").grid(row=3, column=0, padx=5, pady=5)
     recovery_email_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
@@ -657,6 +640,10 @@ def email_acc():
     CTkLabel(input_frame, text="Recovery Mobile:").grid(row=4, column=0, padx=5, pady=5)
     recovery_mobile_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)
     recovery_mobile_entry.grid(row=4, column=1, padx=5, pady=5)
+
+    show_password_var = tk.BooleanVar()
+    show_password_check = CTkCheckBox(input_frame, text="Show Password", checkmark_color="#FFFFFF", border_color="#81C784", fg_color="#81C784", checkbox_height=30, checkbox_width=30, corner_radius=36, variable=show_password_var, command=lambda: password_entry.configure(show="" if show_password_var.get() else "*"))
+    show_password_check.grid(row=5, column=1, pady=5)
 
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
@@ -807,56 +794,25 @@ def bank_acc():
     branch_entry.grid(row=2, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Login PIN:").grid(row=3, column=0, padx=5, pady=5)
-
-    login_pin_frame = CTkFrame(input_frame, fg_color="transparent")
-    login_pin_frame.grid(row=3, column=1, sticky="ew", padx=10, pady=5)
-
-    login_pin_entry = CTkEntry(login_pin_frame, width=225, border_color="#D8CBBF", border_width=2, show="*")
-    login_pin_entry.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+    login_pin_entry = CTkEntry(input_frame, width=250, show="*", border_color="#D8CBBF", border_width=2)
+    login_pin_entry.grid(row=3, column=1, padx=5, pady=5)
 
     CTkLabel(input_frame, text="Transaction PIN:").grid(row=4, column=0, padx=5, pady=5)
+    transaction_pin_entry = CTkEntry(input_frame, width=250, show="*", border_color="#D8CBBF", border_width=2)
+    transaction_pin_entry.grid(row=4, column=1, padx=5, pady=5)
 
-    transaction_pin_frame = CTkFrame(input_frame, fg_color="transparent")
-    transaction_pin_frame.grid(row=4, column=1, sticky="ew", padx=10, pady=5)
+    show_login_pin_var = tk.BooleanVar()
+    show_login_pin_check = CTkCheckBox(input_frame, text="Show Login PIN", checkmark_color="#FFFFFF",
+                                        border_color="#81C784", fg_color="#81C784", checkbox_height=30,
+                                          checkbox_width=30, corner_radius=36, variable=show_login_pin_var,
+                                           command=lambda: login_pin_entry.configure(show="" if show_login_pin_var.get() else "*"))
+    show_login_pin_check.grid(row=5, column=1, pady=5)
 
-    transaction_pin_entry = CTkEntry(transaction_pin_frame, width=225, border_color="#D8CBBF", border_width=2, show="*")
-    transaction_pin_entry.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
-
-    # Login PIN Toggle
-    show_login_pin_label = CTkLabel(login_pin_frame, image=hide_img, text="")
-    show_login_pin_label.grid(row=0, column=1, padx=5)
-
-    login_pin_hidden = True
-
-    def toggle_login_pin_visibility(event=None):
-        nonlocal login_pin_hidden
-        if login_pin_hidden:
-            login_pin_entry.configure(show="")
-            show_login_pin_label.configure(image=show_img)
-        else:
-            login_pin_entry.configure(show="*")
-            show_login_pin_label.configure(image=hide_img)
-        login_pin_hidden = not login_pin_hidden
-
-    show_login_pin_label.bind("<Button-1>", toggle_login_pin_visibility)
-
-    # Transaction PIN Toggle
-    show_transaction_pin_label = CTkLabel(transaction_pin_frame, image=hide_img, text="")
-    show_transaction_pin_label.grid(row=0, column=1, padx=5)
-
-    transaction_pin_hidden = True
-
-    def toggle_transaction_pin_visibility(event=None):
-        nonlocal transaction_pin_hidden
-        if transaction_pin_hidden:
-            transaction_pin_entry.configure(show="")
-            show_transaction_pin_label.configure(image=show_img)
-        else:
-            transaction_pin_entry.configure(show="*")
-            show_transaction_pin_label.configure(image=hide_img)
-        transaction_pin_hidden = not transaction_pin_hidden
-
-    show_transaction_pin_label.bind("<Button-1>", toggle_transaction_pin_visibility)
+    show_transaction_pin_var = tk.BooleanVar()
+    show_transaction_pin_check = CTkCheckBox(input_frame, text="Show Transaction PIN", checkmark_color="#FFFFFF", border_color="#81C784",
+                                              fg_color="#81C784", checkbox_height=30, checkbox_width=30, corner_radius=36,
+                                                variable=show_transaction_pin_var, command=lambda: transaction_pin_entry.configure(show="" if show_transaction_pin_var.get() else "*"))
+    show_transaction_pin_check.grid(row=6, column=1, pady=5)
 
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
