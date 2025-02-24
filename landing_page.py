@@ -67,9 +67,9 @@ def signup():
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (username, password, otp, *[item for pair in security_answers for item in pair]))
         conn.commit()
-        signup_status.configure(text=f"Signup Successful! Your OTP: {otp}", text_color="green")
+        signup_status.configure(text=f"Signup Successful! Your OTP: {otp}", font=("Arial", 16, "bold"), text_color="green")
     except sqlite3.IntegrityError:
-        signup_status.configure(text="Username already exists!", text_color="red")
+        signup_status.configure(text="Username already exists!", font=("Arial", 16, "bold"), text_color="red")
 
 def signin():
     username = username_entry.get()
@@ -79,10 +79,10 @@ def signin():
     user = cursor.fetchone()
     
     if user:
-        signin_status.configure(text="SIGN-IN SUCCESS.", text_color="green")
+        signin_status.configure(text="SIGN-IN SUCCESS.", font=("Arial", 16, "bold"), text_color="green")
         subprocess.Popen(["python", "dashboard.py"])
     else:
-        signin_status.configure(text="Invalid Credentials!", text_color="red")
+        signin_status.configure(text="Fill in the fields!", font=("Arial", 16, "bold"), text_color="red")
 
 def forgot_pin():
     forgot_window = CTkToplevel(root)
@@ -145,7 +145,10 @@ def forgot_pin():
         username = username_entry.get()
         password = hash_password(password_entry.get())
         answers = [entry.get() for entry in answer_entries]
-        
+
+        if not username or not password:
+            CTkLabel(forgot_frame, text="Please fill in all fields!", width=label_width, font=("Arial", 16, "bold"), text_color="red").pack(pady=10)
+            return
 
         cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
         stored_password = cursor.fetchone()
@@ -156,7 +159,7 @@ def forgot_pin():
             conn.commit()
             CTkLabel(forgot_frame, text=f"Your new OTP is: {new_otp}", width=label_width, text_color="green").pack(pady=10)
         else:
-            CTkLabel(forgot_frame, text="Invalid credentials or answers!", width=label_width, text_color="red").pack(pady=10)
+            CTkLabel(forgot_frame, text="Invalid credentials or answers!", font=("Arial", 16, "bold"), width=label_width, text_color="red").pack(pady=10)
 
     CTkButton(forgot_frame, text="Verify and Reset OTP", width=label_width, command=verify_and_reset).pack(pady=10)
 
