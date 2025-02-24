@@ -5,10 +5,8 @@ from tkinter import *
 import subprocess
 from customtkinter import *
 
-# Set Theme
 set_appearance_mode("dark")
 
-# Root Window
 root = CTk()
 root.title("Secure Vault")
 root.geometry("700x500")
@@ -51,25 +49,31 @@ def verify_security_answers(username, answers):
     return correct_answers >= 1
 
 def signup():
-    username = un.get()
-    password = hash_password(pw.get())
+    username = un.get().strip()
+    password = pw.get().strip()
     otp = generate_otp()
     
     security_answers = [
-        (q1.get(), a1.get()), (q2.get(), a2.get())
+        (q1.get().strip(), a1.get().strip()), (q2.get().strip(), a2.get().strip())
     ]
+    
+    if not username or not password or any(not answer for question, answer in security_answers):
+        signup_status.configure(text="Fill up all details!", text_color="red")
+        return
+    
+    hashed_password = hash_password(password)
     
     try:
         cursor.execute("""
             INSERT INTO users (username, password, otp, 
             security_q1, security_a1, security_q2, security_a2) 
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (username, password, otp, *[item for pair in security_answers for item in pair]))
+        """, (username, hashed_password, otp, *[item for pair in security_answers for item in pair]))
         conn.commit()
         signup_status.configure(text=f"Signup Successful! Your OTP: {otp}", text_color="green")
     except sqlite3.IntegrityError:
         signup_status.configure(text="Username already exists!", text_color="red")
-
+        
 def signin():
     username = username_entry.get()
     otp = otp_entry.get()
@@ -99,7 +103,6 @@ def forgot_pin():
     password_entry = CTkEntry(forgot_window, show="*")
     password_entry.pack()
 
-    # Show Password Checkbox
     CTkCheckBox(forgot_window, text="Show Password", font=("Space Grotesk", 12), variable=chk, 
                 command=lambda: show_password(password_entry)).pack(pady=5)
     
@@ -116,14 +119,20 @@ def forgot_pin():
         answer_entries.append(answer)
     
     def verify_and_reset():
-        username = username_entry.get()
-        password = hash_password(password_entry.get())
-        answers = [entry.get() for entry in answer_entries]
+        username = username_entry.get().strip()
+        password = password_entry.get().strip()
+        answers = [entry.get().strip() for entry in answer_entries]
+        
+        if not username or not password or any(not answer for answer in answers):
+            CTkLabel(forgot_window, text="All fields are required!", text_color="red").pack()
+            return
+        
+        hashed_password = hash_password(password)
         
         cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
         stored_password = cursor.fetchone()
         
-        if stored_password and stored_password[0] == password and verify_security_answers(username, answers):
+        if stored_password and stored_password[0] == hashed_password and verify_security_answers(username, answers):
             new_otp = generate_otp()
             cursor.execute("UPDATE users SET otp = ? WHERE username = ?", (new_otp, username))
             conn.commit()
@@ -132,8 +141,6 @@ def forgot_pin():
             CTkLabel(forgot_window, text="Invalid credentials or answers!", text_color="red").pack()
     
     CTkButton(forgot_window, text="Verify and Reset OTP", command=verify_and_reset).pack()
-
-
 def open_signin_page(event=None):
     global username_entry, otp_entry, signin_status
     signin_window = CTkToplevel(root)

@@ -5,3 +5,4 @@ Later, the entire application will be built on a very different tech stack which
 
 ## sub-header
 
+Open up the landing_page.py first to access the application.
