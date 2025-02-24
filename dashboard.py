@@ -147,7 +147,7 @@ def logins():
     input_frame = CTkFrame(content_frame, border_color="#D8CBBF", border_width=2)
     input_frame.pack(pady=5, padx=10)
 
-    label_width = 120
+    label_width = 250
 
     CTkLabel(input_frame, text="Service Name:", width=label_width, anchor="w").grid(row=0, column=0, padx=5, pady=5)
     service_entry = CTkEntry(input_frame, width=250, border_color="#D8CBBF", border_width=2)

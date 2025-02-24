@@ -7,29 +7,12 @@ from customtkinter import *
 from PIL import Image
 
 # Set Theme
-set_appearance_mode("dark")
+set_appearance_mode("system")
 
 # Root Window
 root = CTk()
 root.title("Secure Vault")
 root.geometry("1300x700")
-
-#Light and Dark Toggle 
-def toggle_theme(theme):
-    set_appearance_mode(theme)
-
-    # Refresh all open Toplevel windows
-    for window in root.winfo_toplevels():
-        if isinstance(window, CTkToplevel):
-            window.update()
-            for widget in window.winfo_children():
-                widget.update()
-
-def create_theme_toggle(window):
-    theme_switch = CTkSegmentedButton(root, values=["Light", "Dark"], command=toggle_theme)
-    theme_switch.pack(side="right", pady=10)
-
-create_theme_toggle(root)
 
 chk = BooleanVar()  # Checkbox variable
 
@@ -109,25 +92,28 @@ def forgot_pin():
     forgot_window.grab_set()
     forgot_window.focus_set()
 
-    label_width=120
-    CTkLabel(forgot_window, text="Enter Username:", width=label_width, anchor="center").pack(pady=10)
-    username_entry = CTkEntry(forgot_window)
-    username_entry.pack(pady=10)
-    
-    CTkLabel(forgot_window, text="Enter Password:", width=label_width, anchor="center").pack(pady=10)
+    forgot_frame = CTkFrame(forgot_window, fg_color="#f0f0f0", border_color="#ffffff")
+    forgot_frame.pack(pady=20, padx=20) 
 
-    password_frame = CTkFrame(forgot_window, fg_color="transparent")
-    password_frame.pack(pady=10)
+    label_width=250
+    CTkLabel(forgot_frame, text="Enter Username:", width=label_width, anchor="center").pack(pady=10)
+    username_entry = CTkEntry(forgot_frame)
+    username_entry.pack(pady=10)
+
+    CTkLabel(forgot_frame, text="Enter Password:", width=label_width, anchor="center").pack(pady=10)
+
+    password_frame = CTkFrame(forgot_frame, fg_color="transparent")
+    password_frame.pack(pady=5)
 
     password_entry = CTkEntry(password_frame, show="*")
-    password_entry.pack(pady=10, side= LEFT)
+    password_entry.pack(pady=5, side= LEFT)
 
     #Load Images
     show_img=CTkImage(Image.open("show.png"))
     hide_img=CTkImage(Image.open("hide.png"))
 
     show_password_label=CTkLabel(password_frame, image=hide_img,text="")
-    show_password_label.pack(side=LEFT, pady=5)
+    show_password_label.pack(pady=5, side=LEFT)
 
     password_hidden=True
 
@@ -143,39 +129,36 @@ def forgot_pin():
 
     show_password_label.bind("<Button-1>", toggle_password_visibility)
 
-    # Show Password Checkbox
-   # CTkCheckBox(forgot_window, text="Show Password", font=("Space Grotesk", 12), variable=chk, 
-            #    command=lambda: show_password(password_entry)).pack(pady=5)
-
     security_questions = [
         "Where were you born?",
         "What is your favorite book?"
     ]
-    
+
     answer_entries = []
     for q in security_questions:
-        CTkLabel(forgot_window, text=q).pack()
-        answer = CTkEntry(forgot_window)
+        CTkLabel(forgot_frame, text=q).pack(pady=10)
+        answer = CTkEntry(forgot_frame,  width=label_width)
         answer.pack()
         answer_entries.append(answer)
-    
+
     def verify_and_reset():
         username = username_entry.get()
         password = hash_password(password_entry.get())
         answers = [entry.get() for entry in answer_entries]
         
+
         cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
         stored_password = cursor.fetchone()
-        
+
         if stored_password and stored_password[0] == password and verify_security_answers(username, answers):
             new_otp = generate_otp()
             cursor.execute("UPDATE users SET otp = ? WHERE username = ?", (new_otp, username))
             conn.commit()
-            CTkLabel(forgot_window, text=f"Your new OTP is: {new_otp}", text_color="green").pack()
+            CTkLabel(forgot_frame, text=f"Your new OTP is: {new_otp}", width=label_width, text_color="green").pack(pady=10)
         else:
-            CTkLabel(forgot_window, text="Invalid credentials or answers!", text_color="red").pack()
-    
-    CTkButton(forgot_window, text="Verify and Reset OTP", command=verify_and_reset).pack()
+            CTkLabel(forgot_frame, text="Invalid credentials or answers!", width=label_width, text_color="red").pack(pady=10)
+
+    CTkButton(forgot_frame, text="Verify and Reset OTP", width=label_width, command=verify_and_reset).pack(pady=10)
 
 def open_signin_page(event=None):
     global username_entry, otp_entry, signin_status
@@ -190,7 +173,7 @@ def open_signin_page(event=None):
     signin_window.grab_set()
     signin_window.focus_set()
 
-    label_width=120
+    label_width=250
     CTkLabel(frame, text="SECURE VAULT", font=("Space Grotesk", 20, "bold"), width=label_width, anchor="center").pack(pady=10)
 
     CTkLabel(frame, text="Welcome Back!", font=("Space Grotesk", 16), width=label_width, anchor="center").pack()
@@ -231,7 +214,7 @@ def open_signup_page(event=None):
     frame=CTkFrame(signup_window)
     frame.pack(pady=10, padx=10, fill="both")
 
-    label_width=120
+    label_width=250
     CTkLabel(frame, text="Create Your Account", font=("Space Grotesk", 16,"bold"), width=label_width, anchor="center").pack(pady=10)
 
     CTkLabel(frame, text="Username", font=("Space Grotesk", 12), width=label_width, anchor="center").pack(pady=5)
