@@ -69,7 +69,7 @@ def signup():
         conn.commit()
         signup_status.configure(text=f"Signup Successful! Your OTP: {otp}", font=("Arial", 16, "bold"), text_color="green")
     except sqlite3.IntegrityError:
-        signup_status.configure(text="Username already exists!", font=("Arial", 16, "bold"), text_color="red")
+        signup_status.configure(text="Username Used Already", font=("Arial", 16, "bold"), text_color="red")
 
 def signin():
     username = username_entry.get()
