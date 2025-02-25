@@ -14,6 +14,7 @@ img=Image.open("view.png")
 img2=Image.open("add.png")
 img3=Image.open("update.png")
 img4=Image.open("delete.png")
+img5=Image.open("clear.png")
 show_img = CTkImage(Image.open("show.png"))
 hide_img = CTkImage(Image.open("hide.png"))
 
@@ -204,10 +205,10 @@ def logins():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=10, padx=10)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_login, fg_color="#43A047", image=CTkImage(dark_image=img2, light_image=img2), width=100).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_login, fg_color="#43A047", hover_color="#2E7D32", image=CTkImage(dark_image=img2, light_image=img2), width=100).grid(row=0, column=0, padx=5)
     CTkButton(button_frame, text="Update", corner_radius=32, command=update_login, fg_color="#007bff", hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3), width=100).grid(row=0, column=1, padx=5)
     CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_login, fg_color="#D32F2F", hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4), width=100).grid(row=0, column=2, padx=5)
-    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries, fg_color="#f50c98", hover_color="#6F2DA8", width=100).grid(row=0, column=3, padx=5)
+    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries, fg_color="#f50c98", hover_color="#f83fa3",image=CTkImage(dark_image=img5, light_image=img5), width=100).grid(row=0, column=3, padx=5)
  
     listbox_frame = CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
     listbox_frame.pack(pady=10, padx=10, fill="both", expand=True)
@@ -339,10 +340,10 @@ def secure_notes():
     button_frame = CTkFrame(content_frame)
     button_frame.pack(pady=5)
 
-    CTkButton(button_frame, text="Add", corner_radius=32, command=add_note, fg_color="#43A047", hover_color="#2E7D32").grid(row=0, column=0, padx=5)
-    CTkButton(button_frame, text="Update", corner_radius=32, command=update_note, fg_color="#007bff",hover_color="#0056b3").grid(row=0, column=1, padx=5)
-    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_note, fg_color="#D32F2F",hover_color="#B71C1C").grid(row=0, column=2, padx=5)
-    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries, fg_color="#f50c98", hover_color="#6F2DA8", width=100).grid(row=0, column=3, padx=5)
+    CTkButton(button_frame, text="Add", corner_radius=32, command=add_note, fg_color="#43A047", hover_color="#2E7D32", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
+    CTkButton(button_frame, text="Update", corner_radius=32, command=update_note,  fg_color="#007bff", hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3), width=100).grid(row=0, column=1, padx=5)
+    CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_note,  fg_color="#D32F2F", hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4), width=100).grid(row=0, column=2, padx=5)
+    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries,fg_color="#f50c98", hover_color="#f83fa3",image=CTkImage(dark_image=img5, light_image=img5), width=100).grid(row=0, column=3, padx=5)
 
     listbox_frame = CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
     listbox_frame.pack(pady=10, padx=10, fill="both", expand=True)
@@ -512,7 +513,7 @@ def debit_card():
     CTkButton(button_frame, text="Add", corner_radius=32, command=add_debit_card, fg_color="#43A047", hover_color="#2E7D32", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
     CTkButton(button_frame, text="Update", corner_radius=32, command=update_debit_card, fg_color="#007bff",hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
     CTkButton(button_frame, text="Delete",corner_radius=32,  command=delete_debit_card, fg_color="#D32F2F",hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
-    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries, fg_color="#f50c98", hover_color="#6F2DA8", width=100).grid(row=0, column=3, padx=5)
+    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries,fg_color="#f50c98", hover_color="#f83fa3",image=CTkImage(dark_image=img5, light_image=img5), width=100).grid(row=0, column=3, padx=5)
     # Listbox to show stored debit cards
     listbox_frame =CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
     listbox_frame.pack(pady=10, padx=10, fill="both", expand=True)
@@ -697,7 +698,7 @@ def email_acc():
     CTkButton(button_frame, text="Add", corner_radius=32, command=add_email_account, fg_color="#43A047", hover_color="#2E7D32", image=CTkImage(dark_image=img2, light_image=img2)).grid(row=0, column=0, padx=5)
     CTkButton(button_frame, text="Update", corner_radius=32, command=update_email_account, fg_color="#007bff", hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
     CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_email_account, fg_color="#D32F2F", hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
-    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries, fg_color="#f50c98", hover_color="#6F2DA8", width=100).grid(row=0, column=3, padx=5)
+    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries, fg_color="#f50c98", hover_color="#f83fa3",image=CTkImage(dark_image=img5, light_image=img5), width=100).grid(row=0, column=3, padx=5)
 
     # Listbox to show stored email accounts
     listbox_frame =CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
@@ -897,7 +898,8 @@ def bank_acc():
               hover_color="#0056b3", image=CTkImage(dark_image=img3, light_image=img3)).grid(row=0, column=1, padx=5)
     CTkButton(button_frame, text="Delete", corner_radius=32, command=delete_bank_account, fg_color="#D32F2F",
               hover_color="#B71C1C", image=CTkImage(dark_image=img4, light_image=img4)).grid(row=0, column=2, padx=5)
-    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries, fg_color="#f50c98", hover_color="#6F2DA8", width=100).grid(row=0, column=3, padx=5)
+    CTkButton(button_frame, text="Clear", corner_radius=32, command=clear_entries, fg_color="#f50c98",
+     hover_color="#f83fa3",image=CTkImage(dark_image=img5, light_image=img5), width=100).grid(row=0, column=3, padx=5)
     # Listbox to show stored bank accounts
     listbox_frame =CTkFrame(content_frame, border_width=1, border_color="#D8CBBF", bg_color="#D8CBBF")
     listbox_frame.pack(pady=10, padx=10, fill="both", expand=True)
