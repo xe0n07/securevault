@@ -9,7 +9,6 @@ from PIL import Image
 # Set Theme
 set_appearance_mode("system")
 
-# Root Window
 root = CTk()
 root.title("Secure Vault")
 root.geometry("1300x700")
@@ -52,20 +51,26 @@ def verify_security_answers(username, answers):
     return correct_answers >= 1
 
 def signup():
-    username = un.get()
-    password = hash_password(pw.get())
+    username = un.get().strip()
+    password = pw.get().strip()
     otp = generate_otp()
     
     security_answers = [
-        (q1.get(), a1.get()), (q2.get(), a2.get())
+        (q1.get().strip(), a1.get().strip()), (q2.get().strip(), a2.get().strip())
     ]
+    
+    if not username or not password or any(not answer for question, answer in security_answers):
+        signup_status.configure(text="Fill up all details!", text_color="red")
+        return
+    
+    hashed_password = hash_password(password)
     
     try:
         cursor.execute("""
             INSERT INTO users (username, password, otp, 
             security_q1, security_a1, security_q2, security_a2) 
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (username, password, otp, *[item for pair in security_answers for item in pair]))
+        """, (username, hashed_password, otp, *[item for pair in security_answers for item in pair]))
         conn.commit()
         signup_status.configure(text=f"Signup Successful! Your OTP: {otp}", font=("Arial", 16, "bold"), text_color="green")
     except sqlite3.IntegrityError:
@@ -142,18 +147,20 @@ def forgot_pin():
         answer_entries.append(answer)
 
     def verify_and_reset():
-        username = username_entry.get()
-        password = hash_password(password_entry.get())
-        answers = [entry.get() for entry in answer_entries]
-
-        if not username or not password:
-            CTkLabel(forgot_frame, text="Please fill in all fields!", width=label_width, font=("Arial", 16, "bold"), text_color="red").pack(pady=10)
+        username = username_entry.get().strip()
+        password = password_entry.get().strip()
+        answers = [entry.get().strip() for entry in answer_entries]
+        
+        if not username or not password or any(not answer for answer in answers):
+            CTkLabel(forgot_window, text="All fields are required!", width=label_width, font=("Arial", 16, "bold"), text_color="red").pack(pady=10)
             return
-
+        
+        hashed_password = hash_password(password)
+        
         cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
         stored_password = cursor.fetchone()
-
-        if stored_password and stored_password[0] == password and verify_security_answers(username, answers):
+        
+        if stored_password and stored_password[0] == hashed_password and verify_security_answers(username, answers):
             new_otp = generate_otp()
             cursor.execute("UPDATE users SET otp = ? WHERE username = ?", (new_otp, username))
             conn.commit()
